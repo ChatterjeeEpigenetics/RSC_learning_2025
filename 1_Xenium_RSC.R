@@ -709,7 +709,7 @@ for(i in names(DEG)){
   cluster.marker <- DEG[[cluster]]
   
   data <- data.frame(gene = row.names(cluster.marker),
-                     pval = -log10(cluster.marker$p_val_adj), #+2.225074e-308
+                     pval = -log10(cluster.marker$p_val_adj+2.225074e-308), #Add a tiny value to avoid inf 2.225074e-308
                      lfc = cluster.marker$avg_log2FC)
   
   data <- mutate(data, color = case_when(data$lfc > 0.2 & data$pval > 1.3 ~ "Increased",
