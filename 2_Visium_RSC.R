@@ -683,18 +683,16 @@ dev.off()
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 install.packages("ggalluvial")
 library(ggalluvial)
+# Load integrated Xenium object
+merged_xenium <- readRDS("/home/bbasu/hpchome/xenium_SOR/RSC_integrated_xenium_new.rds")
 
 xenium_markers <- read.xlsx("/home/bbasu/hpchome/xenium_SOR/Xenium mouse gene panel.xlsx")
 xenium_50_gene_panel <- read.xlsx("/home/bbasu/hpchome/xenium_SOR/Updated Xenium 50 custom genes.xlsx")
-
 xenium.gene <- cbind(xenium_markers$Genes, xenium_50_gene_panel$Gene)
-# xenium.gene <- c("Egr1","Egr4","Nr4a1","Nr4a2","Ttr","Per1","Egr3","Dusp5","Nr4a3","Homer1","Gadd45b","Dnajb5",
-#                  "Dnajb1","Hspa5","Sdf2l1","Dusp6","Trib2","Ier5","Xbp1","Tsc22d3","Sgk1","Pantr1","Npas4","Gpr161",
-#                  "Egr2","Per2","Fosl2","Hmgcr","Hmgcs1","Pdia6","Rbm3","Cirbp","Upf2","Spred1","Sik2","Dusp7","Adcy5",
-#                  "Zc3h6","Slc2a1","Ankrd33b","Manf","Fosb","Dio2","Smad3","Slc6a9","Cdkn1a","Hspa1b","Jdp2","Klf2","Irs2")
 
-int.genes = intersect(signif.visium$gene, 
-                      xenium.gene) # 38 genes!
+
+# int.genes = intersect(signif.visium$gene, 
+#                       xenium.gene) # 38 genes!
 
 pseudo_vis_up <- pseudobulk.rsc %>%
   dplyr::filter(p_val_adj < 0.05 & avg_log2FC > 0.2)
@@ -704,8 +702,8 @@ pseudo_vis_down <- pseudobulk.rsc %>%
   dplyr::filter(p_val_adj < 0.05 & avg_log2FC < -0.2)
 nrow(pseudo_vis_down)# 13
 
-up.int <- intersect(rownames(pseudo_vis_up), xenium.gene)#35 genes!
-down.int <- intersect(rownames(pseudo_vis_down), xenium.gene)#3 genes! # "Ttr"   "Zc3h6" "Cldn5"
+# up.int <- intersect(rownames(pseudo_vis_up), xenium.gene)#35 genes!
+# down.int <- intersect(rownames(pseudo_vis_down), xenium.gene)#3 genes! # "Ttr"   "Zc3h6" "Cldn5"
 
 head(merged_xenium@meta.data)
 Idents(merged_xenium) <- merged_xenium$class
@@ -727,29 +725,44 @@ for(i in levels(merged_xenium)){
 }
 
 
-int.exn <- intersect(int.genes, rownames(DEG$ExN %>%
-                                           dplyr::filter(p_val_adj < 0.05 & abs(avg_log2FC) > 0.2)))%>%
+int.exn <- cbind(intersect(rownames(pseudo_vis_up), 
+                           rownames(DEG$ExN %>%
+                                      dplyr::filter(p_val_adj < 0.05 & avg_log2FC > 0.2))),
+                 intersect(rownames(pseudo_vis_down), 
+                           rownames(DEG$ExN %>%
+                                      dplyr::filter(p_val_adj < 0.05 & avg_log2FC < -0.2))))%>%
   paste(collapse = ", ")
-int.InN <- intersect(int.genes, rownames(DEG$InN %>%
-                                           dplyr::filter(p_val_adj < 0.05 & abs(avg_log2FC) > 0.2)))%>%
+
+int.InN <- cbind(intersect(rownames(pseudo_vis_up), 
+                           rownames(DEG$InN %>%
+                                      dplyr::filter(p_val_adj < 0.05 & avg_log2FC > 0.2))),
+                 intersect(rownames(pseudo_vis_down), 
+                           rownames(DEG$InN %>%
+                                      dplyr::filter(p_val_adj < 0.05 & avg_log2FC < -0.2))))%>%
   paste(collapse = ", ")
-int.astro <- intersect(int.genes, rownames(DEG$Astro %>%
-                                             dplyr::filter(p_val_adj < 0.05 & abs(avg_log2FC) > 0.2)))%>%
+
+int.astro <- cbind(intersect(rownames(pseudo_vis_up), 
+                             rownames(DEG$Astro %>%
+                                        dplyr::filter(p_val_adj < 0.05 & avg_log2FC > 0.2))),
+                   intersect(rownames(pseudo_vis_down), 
+                             rownames(DEG$Astro %>%
+                                        dplyr::filter(p_val_adj < 0.05 & avg_log2FC < -0.2))))%>%
   paste(collapse = ", ")
-int.oligo <- intersect(int.genes, rownames(DEG$Oligo %>%
-                                             dplyr::filter(p_val_adj < 0.05 & abs(avg_log2FC) > 0.2)))%>%
+
+int.oligo <- cbind(intersect(rownames(pseudo_vis_up), 
+                             rownames(DEG$Oligo %>%
+                                        dplyr::filter(p_val_adj < 0.05 & avg_log2FC > 0.2))),
+                   intersect(rownames(pseudo_vis_down), 
+                             rownames(DEG$Oligo %>%
+                                        dplyr::filter(p_val_adj < 0.05 & avg_log2FC < -0.2))))%>%
   paste(collapse = ", ")
-int.microglia <- intersect(int.genes, rownames(DEG$Microglia %>%
-                                                 dplyr::filter(p_val_adj < 0.05 & abs(avg_log2FC) > 0.2)))%>%
-  paste(collapse = ", ")
-int.endo <- intersect(int.genes, rownames(DEG$Endo %>%
-                                            dplyr::filter(p_val_adj < 0.05 & abs(avg_log2FC) > 0.2)))%>%
-  paste(collapse = ", ")
-int.VLMC <- intersect(int.genes, rownames(DEG$VLMC %>%
-                                            dplyr::filter(p_val_adj < 0.05 & abs(avg_log2FC) > 0.2)))%>%
-  paste(collapse = ", ")
-int.OPC <- intersect(int.genes, rownames(DEG$OPC %>%
-                                           dplyr::filter(p_val_adj < 0.05 & abs(avg_log2FC) > 0.2)))%>%
+
+int.microglia <- cbind(intersect(rownames(pseudo_vis_up), 
+                                 rownames(DEG$Microglia %>%
+                                            dplyr::filter(p_val_adj < 0.05 & avg_log2FC > 0.2))),
+                       intersect(rownames(pseudo_vis_down), 
+                                 rownames(DEG$Microglia %>%
+                                            dplyr::filter(p_val_adj < 0.05 & avg_log2FC < -0.2))))%>%
   paste(collapse = ", ")
 
 
