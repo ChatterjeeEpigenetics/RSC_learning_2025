@@ -9,8 +9,7 @@
 
 # Summary: RSC Spatial Transcriptomics data (Homecage vs SOR)
 # Written by: Budhaditya Basu
-# Date: 7/30/2024
-install.packages('Seurat')
+
 library(Seurat)
 library(ggplot2)
 library(patchwork)
@@ -805,3 +804,4 @@ ggsave(filename = "/home/bbasu/hpchome/xenium_SOR/Analysis_new/Sankey_plot.svg",
        width = 8,
        units = "in",
        dpi = 600)
+
