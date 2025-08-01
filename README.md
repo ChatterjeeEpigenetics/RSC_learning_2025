@@ -1,0 +1,1 @@
+Cell-type specific spatial transcriptomic signature of the retrosplenial cortex following object exploration. The Xenium data generated in this study have been deposited in the Zenodo repository :  https://doi.org/10.5281/zenodo.14630054
