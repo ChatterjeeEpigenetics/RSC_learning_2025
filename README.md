@@ -1,2 +1,2 @@
-Cell-type specific spatial transcriptomic signature of the retrosplenial cortex following object exploration. The Xenium data generated in this study have been deposited in the Zenodo repository :  [https://doi.org/10.5281/zenodo.14630054](https://doi.org/10.5281/zenodo.16697913)
+Cell-type specific spatial transcriptomic signature of the retrosplenial cortex following object exploration. The Xenium data generated in this study have been deposited in the Zenodo repository :  [[https://doi.org/10.5281/zenodo.14630054](https://doi.org/10.5281/zenodo.16697913)](https://doi.org/10.5281/zenodo.16697913)
 <img width="1001" height="1672" alt="image" src="https://github.com/user-attachments/assets/95fc5a24-16f8-4035-96f6-9136e7a68ad2" />
